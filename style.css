@@ -10,7 +10,7 @@ body {
   overflow-x: hidden;
   background-image: url("./img/fundo22.png");
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
@@ -19,90 +19,142 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(6, 26, 64, 0.75);
+  background: rgba(6, 26, 64, 0.78);
   z-index: -1;
 }
 
 .container {
-  position: relative;
-  max-width: 900px;
+  max-width: 950px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px 30px 30px;
-  background: rgba(0, 29, 61, 0.85);
+  padding: 16px 28px 30px;
+  background: rgba(0, 29, 61, 0.88);
   backdrop-filter: blur(4px);
   border-radius: 18px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
-}
-
-.premio-card {
-  position: absolute;
-  top: 18px;
-  right: 25px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, rgba(143, 107, 0, 0.95), rgba(80, 56, 0, 0.95));
-  border: 1px solid #ffd60a;
-  border-radius: 14px;
-  padding: 10px 15px;
-  box-shadow: 0 0 18px rgba(255, 214, 10, 0.35);
-}
-
-.trofeu {
-  font-size: 30px;
-}
-
-.premio-card small {
-  display: block;
-  color: #fff4b8;
-  font-size: 12px;
-}
-
-.premio-card strong {
-  display: block;
-  color: #ffffff;
-  font-size: 21px;
 }
 
 .topo {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 8px;
-  padding-right: 180px;
+  gap: 18px;
+  text-align: center;
+  margin-bottom: 14px;
 }
 
 .logo {
-  width: 95px;
-  height: 95px;
+  width: 82px;
+  height: 82px;
   object-fit: contain;
 }
 
 h1 {
   color: #ffd60a;
   margin: 0;
-  font-size: 34px;
+  font-size: 32px;
 }
 
 p {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   color: #ddd;
+}
+
+.cards-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(143, 107, 0, 0.95), rgba(0, 53, 102, 0.9));
+  border: 1px solid #ffd60a;
+  box-shadow: 0 0 16px rgba(255, 214, 10, 0.25);
+}
+
+.card-info span {
+  font-size: 30px;
+}
+
+.card-info small {
+  display: block;
+  color: #fff4b8;
+  font-size: 13px;
+}
+
+.card-info strong {
+  display: block;
+  color: white;
+  font-size: 21px;
+}
+
+.consulta-card {
+  margin-bottom: 10px;
+}
+
+.btn-busca {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid rgba(255, 214, 10, 0.55);
+  border-radius: 12px;
+  background: rgba(0, 53, 102, 0.8);
+  color: #ffd60a;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.area-busca {
+  display: none;
+  margin-top: 8px;
+  padding: 10px;
+  background: rgba(0, 53, 102, 0.65);
+  border: 1px solid rgba(255, 214, 10, 0.35);
+  border-radius: 12px;
+}
+
+.area-busca.ativa {
+  display: block;
+}
+
+.area-busca input {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 9px;
+  font-size: 15px;
+  outline: none;
+}
+
+.resultado-busca {
+  margin-top: 8px;
+  padding: 9px;
+  border-radius: 9px;
+  background: rgba(0, 29, 61, 0.9);
+  color: #e6f2ff;
+  text-align: center;
+  line-height: 1.4;
+  font-size: 14px;
 }
 
 .atualizacao {
   text-align: center;
   color: #d7eaff;
   font-size: 13px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .ranking-header,
 .ranking-item {
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
-  gap: 15px;
+  grid-template-columns: 115px 1fr 120px;
+  gap: 12px;
   align-items: center;
 }
 
@@ -114,8 +166,8 @@ p {
 }
 
 .ranking-item {
-  padding: 15px 12px;
-  margin-top: 10px;
+  padding: 14px 12px;
+  margin-top: 9px;
   background: rgba(0, 53, 102, 0.9);
   border-radius: 10px;
 }
@@ -127,7 +179,7 @@ p {
 
 .nome,
 .pontos {
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .pontos {
@@ -156,72 +208,90 @@ p {
   margin-top: 20px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 700px) {
   body {
     background-attachment: scroll;
   }
 
   .container {
     width: 100%;
-    min-height: 100vh;
     margin: 0;
-    padding: 15px;
+    padding: 12px;
     border-radius: 0;
-  }
-
-  .premio-card {
-    position: static;
-    width: fit-content;
-    margin: 0 auto 14px;
   }
 
   .topo {
     flex-direction: column;
-    text-align: center;
-    gap: 8px;
-    padding-right: 0;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 12px;
   }
 
   .logo {
-    width: 82px;
-    height: 82px;
+    width: 70px;
+    height: 70px;
   }
 
   h1 {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   p {
+    font-size: 13px;
+  }
+
+  .cards-info {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .card-info {
+    padding: 10px;
+    gap: 7px;
+  }
+
+  .card-info span {
+    font-size: 24px;
+  }
+
+  .card-info small {
+    font-size: 11px;
+  }
+
+  .card-info strong {
+    font-size: 15px;
+  }
+
+  .btn-busca {
+    padding: 10px;
     font-size: 14px;
   }
 
   .ranking-header,
   .ranking-item {
-    grid-template-columns: 72px 1fr 82px;
-    gap: 8px;
+    grid-template-columns: 68px 1fr 74px;
+    gap: 7px;
   }
 
   .ranking-header {
     font-size: 12px;
-    padding: 10px 6px;
+    padding: 9px 6px;
   }
 
   .ranking-item {
-    padding: 12px 8px;
+    padding: 11px 7px;
   }
 
   .nome {
-    font-size: 15px;
+    font-size: 14px;
     word-break: break-word;
   }
 
-  .pontos,
-  .posicao {
-    font-size: 15px;
+  .posicao,
+  .pontos {
+    font-size: 13px;
   }
 
   .pontos strong {
-    font-size: 17px;
+    font-size: 15px;
   }
 }

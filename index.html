@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
   <title>Ranking Bolão</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,22 +10,49 @@
 
   <main class="container">
 
-    <div class="premio-card">
-      <span class="trofeu">🏆</span>
-      <div>
-        <small>Prêmio atual</small>
-        <strong id="premioTotal">R$ 0,00</strong>
-      </div>
-    </div>
-
-    <div class="topo">
+    <header class="topo">
       <img src="img/logo.png" alt="Logo do bolão" class="logo">
-
       <div>
         <h1>Ranking do Bolão</h1>
         <p>Copa do Mundo 2026</p>
       </div>
-    </div>
+    </header>
+
+    <section class="cards-info">
+      <div class="card-info">
+        <span>🏆</span>
+        <div>
+          <small>Prêmio atual</small>
+          <strong id="premioTotal">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <div class="card-info">
+        <span>🥇</span>
+        <div>
+          <small>Líder atual</small>
+          <strong id="liderAtual">Carregando...</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="consulta-card">
+      <button id="btnBusca" class="btn-busca">
+        🔍 Consultar minha posição
+      </button>
+
+      <div id="areaBusca" class="area-busca">
+        <input 
+          type="text" 
+          id="buscaParticipante" 
+          placeholder="Digite seu nome..."
+        >
+
+        <div id="resultadoBusca" class="resultado-busca">
+          Digite um nome para consultar.
+        </div>
+      </div>
+    </section>
 
     <div class="atualizacao" id="ultimaAtualizacao">
       Carregando ranking...

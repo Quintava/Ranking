@@ -6,6 +6,13 @@ const VALOR_POR_PARTICIPANTE = 20;
 const ranking = document.getElementById("ranking");
 const ultimaAtualizacao = document.getElementById("ultimaAtualizacao");
 const premioTotalEl = document.getElementById("premioTotal");
+const liderAtualEl = document.getElementById("liderAtual");
+const btnBusca = document.getElementById("btnBusca");
+const areaBusca = document.getElementById("areaBusca");
+const buscaParticipante = document.getElementById("buscaParticipante");
+const resultadoBusca = document.getElementById("resultadoBusca");
+
+let listaRanking = [];
 
 async function carregarRanking() {
   try {
@@ -20,10 +27,9 @@ async function carregarRanking() {
     }
 
     const dados = await resposta.json();
-
     const linhas = dados.slice(1);
 
-    const lista = linhas
+    listaRanking = linhas
       .map(colunas => {
         return {
           nome: limparCampo(colunas[0]),
@@ -39,12 +45,20 @@ async function carregarRanking() {
         return a.nome.localeCompare(b.nome, "pt-BR", {
           sensitivity: "base"
         });
+      })
+      .map((pessoa, index) => {
+        return {
+          ...pessoa,
+          posicaoAtual: index + 1
+        };
       });
 
-    const premioTotal = lista.length * VALOR_POR_PARTICIPANTE;
+    const premioTotal = listaRanking.length * VALOR_POR_PARTICIPANTE;
 
     mostrarPremio(premioTotal);
-    mostrarRanking(lista);
+    mostrarLiderAtual();
+    mostrarRanking();
+    atualizarBusca();
     atualizarHorario();
 
   } catch (erro) {
@@ -56,6 +70,104 @@ async function carregarRanking() {
       </p>
     `;
   }
+}
+
+function mostrarRanking() {
+  ranking.innerHTML = "";
+
+  if (listaRanking.length === 0) {
+    ranking.innerHTML = `
+      <p class="erro">
+        Nenhum palpiteiro encontrado na planilha.
+      </p>
+    `;
+    mostrarPremio(0);
+    mostrarLiderAtual();
+    return;
+  }
+
+  listaRanking.forEach(pessoa => {
+    const item = document.createElement("div");
+
+    item.classList.add("ranking-item");
+
+    if (pessoa.posicaoAtual === 1) item.classList.add("top1");
+    if (pessoa.posicaoAtual === 2) item.classList.add("top2");
+    if (pessoa.posicaoAtual === 3) item.classList.add("top3");
+
+    item.innerHTML = `
+      <span class="posicao">${pessoa.posicaoAtual}º</span>
+      <span class="nome">${pessoa.nome}</span>
+      <span class="pontos">
+        <strong>${pessoa.pontos}</strong> pts
+      </span>
+    `;
+
+    ranking.appendChild(item);
+  });
+}
+
+function mostrarLiderAtual() {
+  if (!liderAtualEl) return;
+
+  if (listaRanking.length === 0) {
+    liderAtualEl.textContent = "Sem líder";
+    return;
+  }
+
+  const lider = listaRanking[0];
+  liderAtualEl.textContent = lider.nome;
+}
+
+function atualizarBusca() {
+  if (!buscaParticipante || !resultadoBusca) return;
+
+  const termo = buscaParticipante.value.trim().toLowerCase();
+
+  if (!termo) {
+    resultadoBusca.textContent = "Digite um nome para consultar.";
+    return;
+  }
+
+  const pessoa = listaRanking.find(item =>
+    item.nome.toLowerCase().includes(termo)
+  );
+
+  if (!pessoa) {
+    resultadoBusca.textContent = "Participante não encontrado.";
+    return;
+  }
+
+  const lider = listaRanking[0];
+  const diferenca = lider.pontos - pessoa.pontos;
+
+  if (pessoa.posicaoAtual === 1) {
+    resultadoBusca.innerHTML = `
+      🏆 <strong>${pessoa.nome}</strong>, você é o líder do bolão!
+      <br>
+      Pontuação: <strong>${pessoa.pontos} pts</strong>
+    `;
+    return;
+  }
+
+  resultadoBusca.innerHTML = `
+    <strong>${pessoa.nome}</strong> está em 
+    <strong>${pessoa.posicaoAtual}º lugar</strong>.
+    <br>
+    Pontuação: <strong>${pessoa.pontos} pts</strong>.
+    <br>
+    Está a <strong>${diferenca} pts</strong> do líder 
+    <strong>${lider.nome}</strong>.
+  `;
+}
+
+function mostrarPremio(valor) {
+  if (!premioTotalEl) return;
+
+  premioTotalEl.textContent = valor.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
 }
 
 function limparCampo(campo) {
@@ -76,49 +188,6 @@ function converterNumero(valor) {
   return Number(numero) || 0;
 }
 
-function mostrarPremio(valor) {
-  if (!premioTotalEl) return;
-
-  premioTotalEl.textContent = valor.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL"
-  });
-}
-
-function mostrarRanking(lista) {
-  ranking.innerHTML = "";
-
-  if (lista.length === 0) {
-    ranking.innerHTML = `
-      <p class="erro">
-        Nenhum palpiteiro encontrado na planilha.
-      </p>
-    `;
-    mostrarPremio(0);
-    return;
-  }
-
-  lista.forEach((pessoa, index) => {
-    const item = document.createElement("div");
-
-    item.classList.add("ranking-item");
-
-    if (index === 0) item.classList.add("top1");
-    if (index === 1) item.classList.add("top2");
-    if (index === 2) item.classList.add("top3");
-
-    item.innerHTML = `
-      <span class="posicao">${index + 1}º</span>
-      <span class="nome">${pessoa.nome}</span>
-      <span class="pontos">
-        <strong>${pessoa.pontos}</strong> pts
-      </span>
-    `;
-
-    ranking.appendChild(item);
-  });
-}
-
 function atualizarHorario() {
   if (!ultimaAtualizacao) return;
 
@@ -135,6 +204,16 @@ function atualizarHorario() {
     });
 }
 
+btnBusca.addEventListener("click", () => {
+  areaBusca.classList.toggle("ativa");
+
+  if (areaBusca.classList.contains("ativa")) {
+    buscaParticipante.focus();
+  }
+});
+
+buscaParticipante.addEventListener("input", atualizarBusca);
+
 carregarRanking();
 
-setInterval(carregarRanking, 10000);
+setInterval(carregarRanking, 15000);

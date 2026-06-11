@@ -8,7 +8,6 @@ body {
   min-height: 100vh;
   color: white;
   overflow-x: hidden;
-
   background-image: url("./img/fundo22.png");
   background-size: cover;
   background-position: center center;
@@ -25,7 +24,9 @@ body::before {
 }
 
 .container {
+  position: relative;
   max-width: 900px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 20px 30px 30px;
   background: rgba(0, 29, 61, 0.85);
@@ -34,12 +35,43 @@ body::before {
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
 
+.premio-card {
+  position: absolute;
+  top: 18px;
+  right: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(143, 107, 0, 0.95), rgba(80, 56, 0, 0.95));
+  border: 1px solid #ffd60a;
+  border-radius: 14px;
+  padding: 10px 15px;
+  box-shadow: 0 0 18px rgba(255, 214, 10, 0.35);
+}
+
+.trofeu {
+  font-size: 30px;
+}
+
+.premio-card small {
+  display: block;
+  color: #fff4b8;
+  font-size: 12px;
+}
+
+.premio-card strong {
+  display: block;
+  color: #ffffff;
+  font-size: 21px;
+}
+
 .topo {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  padding-right: 180px;
 }
 
 .logo {
@@ -59,6 +91,13 @@ p {
   color: #ddd;
 }
 
+.atualizacao {
+  text-align: center;
+  color: #d7eaff;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
 .ranking-header,
 .ranking-item {
   display: grid;
@@ -71,6 +110,7 @@ p {
   padding: 12px;
   color: #ffd60a;
   border-bottom: 2px solid #ffd60a;
+  font-size: 15px;
 }
 
 .ranking-item {
@@ -94,6 +134,10 @@ p {
   text-align: right;
 }
 
+.pontos strong {
+  color: #ffd60a;
+}
+
 .top1 {
   background: linear-gradient(90deg, rgba(143, 107, 0, 0.95), rgba(0, 53, 102, 0.9));
 }
@@ -112,38 +156,72 @@ p {
   margin-top: 20px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
   body {
     background-attachment: scroll;
   }
 
   .container {
-    margin: 0 12px;
-    padding: 18px;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  .premio-card {
+    position: static;
+    width: fit-content;
+    margin: 0 auto 14px;
   }
 
   .topo {
     flex-direction: column;
     text-align: center;
+    gap: 8px;
+    padding-right: 0;
+    margin-bottom: 10px;
   }
 
   .logo {
-    width: 85px;
-    height: 85px;
+    width: 82px;
+    height: 82px;
   }
 
   h1 {
     font-size: 26px;
   }
 
-  .ranking-header,
-  .ranking-item {
-    grid-template-columns: 80px 1fr 80px;
+  p {
+    font-size: 14px;
   }
 
-  .nome,
+  .ranking-header,
+  .ranking-item {
+    grid-template-columns: 72px 1fr 82px;
+    gap: 8px;
+  }
+
+  .ranking-header {
+    font-size: 12px;
+    padding: 10px 6px;
+  }
+
+  .ranking-item {
+    padding: 12px 8px;
+  }
+
+  .nome {
+    font-size: 15px;
+    word-break: break-word;
+  }
+
   .pontos,
   .posicao {
-    font-size: 16px;
+    font-size: 15px;
+  }
+
+  .pontos strong {
+    font-size: 17px;
   }
 }

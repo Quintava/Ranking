@@ -1,67 +1,53 @@
-const URL_PLANILHA_BASE =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS_gmljlZhPy8DdT6Nbn-D9WgSwuL_IIq3ZlAsIYdea9e2ZZh34J5lftUhgo2sew2ErVRHb9SCVmbS0/pub?output=csv";
+const URL_API =
+  "https://script.google.com/macros/s/AKfycbwPY75uUTYVo7jYfZhWY_vbUzHWaWXtJO7_FH0LsXQBBZ74tz92RilbaswHdIYwa07p/exec";
+
+const VALOR_POR_PARTICIPANTE = 20;
 
 const ranking = document.getElementById("ranking");
 const ultimaAtualizacao = document.getElementById("ultimaAtualizacao");
+const premioTotalEl = document.getElementById("premioTotal");
 
 async function carregarRanking() {
   try {
-
-    const urlSemCache =
-      `${URL_PLANILHA_BASE}&cachebuster=${Date.now()}`;
+    const urlSemCache = `${URL_API}?cachebuster=${Date.now()}`;
 
     const resposta = await fetch(urlSemCache, {
       cache: "no-store"
     });
 
     if (!resposta.ok) {
-      throw new Error("Não foi possível acessar a planilha.");
+      throw new Error("Não foi possível acessar a API.");
     }
 
-    const texto = await resposta.text();
+    const dados = await resposta.json();
 
-    if (!texto.trim()) {
-      throw new Error("A planilha está vazia.");
-    }
-
-    const linhas = texto
-      .trim()
-      .split(/\r?\n/)
-      .slice(1);
+    const linhas = dados.slice(1);
 
     const lista = linhas
-      .map(linha => {
-        const colunas = linha.split(",");
-
+      .map(colunas => {
         return {
           nome: limparCampo(colunas[0]),
-          pontos: converterPontos(colunas[1])
+          pontos: converterNumero(colunas[1])
         };
       })
       .filter(item => item.nome)
       .sort((a, b) => {
-
-        // Critério principal: pontos
         if (b.pontos !== a.pontos) {
           return b.pontos - a.pontos;
         }
 
-        // Critério de desempate: ordem alfabética
-        return a.nome.localeCompare(
-          b.nome,
-          "pt-BR",
-          {
-            sensitivity: "base"
-          }
-        );
-
+        return a.nome.localeCompare(b.nome, "pt-BR", {
+          sensitivity: "base"
+        });
       });
 
+    const premioTotal = lista.length * VALOR_POR_PARTICIPANTE;
+
+    mostrarPremio(premioTotal);
     mostrarRanking(lista);
     atualizarHorario();
 
   } catch (erro) {
-
     console.error("Erro ao carregar ranking:", erro);
 
     ranking.innerHTML = `
@@ -69,48 +55,50 @@ async function carregarRanking() {
         Erro ao carregar a planilha.
       </p>
     `;
-
   }
 }
 
 function limparCampo(campo) {
-
   if (!campo) return "";
 
-  return campo
+  return String(campo)
     .replaceAll('"', "")
     .replace(/\r/g, "")
     .trim();
-
 }
 
-function converterPontos(valor) {
-
-  const pontos = limparCampo(valor)
+function converterNumero(valor) {
+  const numero = limparCampo(valor)
+    .replace(/\./g, "")
     .replace(",", ".")
     .replace(/[^\d.-]/g, "");
 
-  return Number(pontos) || 0;
+  return Number(numero) || 0;
+}
 
+function mostrarPremio(valor) {
+  if (!premioTotalEl) return;
+
+  premioTotalEl.textContent = valor.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
 }
 
 function mostrarRanking(lista) {
-
   ranking.innerHTML = "";
 
   if (lista.length === 0) {
-
     ranking.innerHTML = `
       <p class="erro">
         Nenhum palpiteiro encontrado na planilha.
       </p>
     `;
-
+    mostrarPremio(0);
     return;
   }
 
   lista.forEach((pessoa, index) => {
-
     const item = document.createElement("div");
 
     item.classList.add("ranking-item");
@@ -128,13 +116,10 @@ function mostrarRanking(lista) {
     `;
 
     ranking.appendChild(item);
-
   });
-
 }
 
 function atualizarHorario() {
-
   if (!ultimaAtualizacao) return;
 
   const agora = new Date();
@@ -148,10 +133,8 @@ function atualizarHorario() {
       minute: "2-digit",
       second: "2-digit"
     });
-
 }
 
 carregarRanking();
 
-// Atualiza a cada 10 segundos
 setInterval(carregarRanking, 10000);

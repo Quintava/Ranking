@@ -1,11 +1,16 @@
-const URL_PLANILHA =
+const URL_PLANILHA_BASE =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vS_gmljlZhPy8DdT6Nbn-D9WgSwuL_IIq3ZlAsIYdea9e2ZZh34J5lftUhgo2sew2ErVRHb9SCVmbS0/pub?output=csv";
 
 const ranking = document.getElementById("ranking");
+const ultimaAtualizacao = document.getElementById("ultimaAtualizacao");
 
 async function carregarRanking() {
   try {
-    const resposta = await fetch(URL_PLANILHA);
+    const urlSemCache = `${URL_PLANILHA_BASE}&cachebuster=${Date.now()}`;
+
+    const resposta = await fetch(urlSemCache, {
+      cache: "no-store"
+    });
 
     if (!resposta.ok) {
       throw new Error("Não foi possível acessar a planilha.");
@@ -13,7 +18,14 @@ async function carregarRanking() {
 
     const texto = await resposta.text();
 
-    const linhas = texto.trim().split("\n").slice(1);
+    if (!texto.trim()) {
+      throw new Error("A planilha está vazia.");
+    }
+
+    const linhas = texto
+      .trim()
+      .split(/\r?\n/)
+      .slice(1);
 
     const lista = linhas
       .map(linha => {
@@ -21,16 +33,17 @@ async function carregarRanking() {
 
         return {
           nome: limparCampo(colunas[0]),
-          pontos: Number(limparCampo(colunas[1])) || 0
+          pontos: converterPontos(colunas[1])
         };
       })
       .filter(item => item.nome)
       .sort((a, b) => b.pontos - a.pontos);
 
     mostrarRanking(lista);
+    atualizarHorario();
 
   } catch (erro) {
-    console.error("Erro:", erro);
+    console.error("Erro ao carregar ranking:", erro);
 
     ranking.innerHTML = `
       <p class="erro">
@@ -49,8 +62,25 @@ function limparCampo(campo) {
     .trim();
 }
 
+function converterPontos(valor) {
+  const pontos = limparCampo(valor)
+    .replace(",", ".")
+    .replace(/[^\d.-]/g, "");
+
+  return Number(pontos) || 0;
+}
+
 function mostrarRanking(lista) {
   ranking.innerHTML = "";
+
+  if (lista.length === 0) {
+    ranking.innerHTML = `
+      <p class="erro">
+        Nenhum palpiteiro encontrado na planilha.
+      </p>
+    `;
+    return;
+  }
 
   lista.forEach((pessoa, index) => {
     const item = document.createElement("div");
@@ -64,12 +94,31 @@ function mostrarRanking(lista) {
     item.innerHTML = `
       <span class="posicao">${index + 1}º</span>
       <span class="nome">${pessoa.nome}</span>
-      <span class="pontos">${pessoa.pontos} pts</span>
+      <span class="pontos">
+        <strong>${pessoa.pontos}</strong> pts
+      </span>
     `;
 
     ranking.appendChild(item);
   });
 }
 
+function atualizarHorario() {
+  if (!ultimaAtualizacao) return;
+
+  const agora = new Date();
+
+  ultimaAtualizacao.textContent =
+    "Última atualização: " +
+    agora.toLocaleDateString("pt-BR") +
+    " " +
+    agora.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+}
+
 carregarRanking();
-setInterval(carregarRanking, 30000);
+
+setInterval(carregarRanking, 10000);

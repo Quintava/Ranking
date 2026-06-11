@@ -6,7 +6,9 @@ const ultimaAtualizacao = document.getElementById("ultimaAtualizacao");
 
 async function carregarRanking() {
   try {
-    const urlSemCache = `${URL_PLANILHA_BASE}&cachebuster=${Date.now()}`;
+
+    const urlSemCache =
+      `${URL_PLANILHA_BASE}&cachebuster=${Date.now()}`;
 
     const resposta = await fetch(urlSemCache, {
       cache: "no-store"
@@ -37,12 +39,29 @@ async function carregarRanking() {
         };
       })
       .filter(item => item.nome)
-      .sort((a, b) => b.pontos - a.pontos);
+      .sort((a, b) => {
+
+        // Critério principal: pontos
+        if (b.pontos !== a.pontos) {
+          return b.pontos - a.pontos;
+        }
+
+        // Critério de desempate: ordem alfabética
+        return a.nome.localeCompare(
+          b.nome,
+          "pt-BR",
+          {
+            sensitivity: "base"
+          }
+        );
+
+      });
 
     mostrarRanking(lista);
     atualizarHorario();
 
   } catch (erro) {
+
     console.error("Erro ao carregar ranking:", erro);
 
     ranking.innerHTML = `
@@ -50,39 +69,48 @@ async function carregarRanking() {
         Erro ao carregar a planilha.
       </p>
     `;
+
   }
 }
 
 function limparCampo(campo) {
+
   if (!campo) return "";
 
   return campo
     .replaceAll('"', "")
     .replace(/\r/g, "")
     .trim();
+
 }
 
 function converterPontos(valor) {
+
   const pontos = limparCampo(valor)
     .replace(",", ".")
     .replace(/[^\d.-]/g, "");
 
   return Number(pontos) || 0;
+
 }
 
 function mostrarRanking(lista) {
+
   ranking.innerHTML = "";
 
   if (lista.length === 0) {
+
     ranking.innerHTML = `
       <p class="erro">
         Nenhum palpiteiro encontrado na planilha.
       </p>
     `;
+
     return;
   }
 
   lista.forEach((pessoa, index) => {
+
     const item = document.createElement("div");
 
     item.classList.add("ranking-item");
@@ -100,10 +128,13 @@ function mostrarRanking(lista) {
     `;
 
     ranking.appendChild(item);
+
   });
+
 }
 
 function atualizarHorario() {
+
   if (!ultimaAtualizacao) return;
 
   const agora = new Date();
@@ -117,8 +148,10 @@ function atualizarHorario() {
       minute: "2-digit",
       second: "2-digit"
     });
+
 }
 
 carregarRanking();
 
+// Atualiza a cada 10 segundos
 setInterval(carregarRanking, 10000);

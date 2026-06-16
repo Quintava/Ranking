@@ -3,20 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ranking Bolão</title>
+  <title>Bolão Copa 2026</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <main class="container">
+<main class="container">
 
-    <header class="topo">
-      <img src="img/logo.png" alt="Logo do bolão" class="logo">
-      <div>
-        <h1>Ranking do Bolão</h1>
-        <p>Copa do Mundo 2026</p>
-      </div>
-    </header>
+  <header class="topo">
+    <img src="img/logo.png" alt="Logo do bolão" class="logo">
+    <div>
+      <h1>Ranking do Bolão</h1>
+      <p>Copa do Mundo 2026</p>
+    </div>
+  </header>
+
+  <nav class="menu-principal">
+    <button class="menu-btn ativo" data-pagina="ranking">🏆 Ranking</button>
+    <button class="menu-btn" data-pagina="jogos">⚽ Jogos</button>
+    <button class="menu-btn" data-pagina="proximos">📅 Próximos</button>
+    <button class="menu-btn" data-pagina="finalizados">✅ Finalizados</button>
+  </nav>
+
+  <section id="pagina-ranking" class="pagina ativa">
 
     <section class="cards-info">
       <div class="card-info">
@@ -36,21 +45,17 @@
       </div>
     </section>
 
-    <section class="consulta-card">
-      <button id="btnBusca" class="btn-busca">
-        🔍 Consultar minha posição
-      </button>
+    <section class="consulta-card consulta-fixa">
+      <h2>Consultar minha posição</h2>
 
-      <div id="areaBusca" class="area-busca">
-        <input 
-          type="text" 
-          id="buscaParticipante" 
-          placeholder="Digite seu nome..."
-        >
+      <input 
+        type="text" 
+        id="buscaParticipante" 
+        placeholder="Digite seu nome..."
+      >
 
-        <div id="resultadoBusca" class="resultado-busca">
-          Digite um nome para consultar.
-        </div>
+      <div id="resultadoBusca" class="resultado-busca">
+        Digite um nome para consultar.
       </div>
     </section>
 
@@ -66,8 +71,41 @@
 
     <section id="ranking"></section>
 
-  </main>
+  </section>
 
-  <script src="script.js"></script>
+  <section id="pagina-jogos" class="pagina">
+    <section class="titulo-pagina">
+      <h2>Jogos da Copa</h2>
+      <p>Janela de jogos ainda em teste</p>
+    </section>
+
+    <div class="atualizacao" id="ultimaAtualizacaoJogos">
+      Carregando jogos...
+    </div>
+
+    <section id="listaJogos" class="lista-jogos"></section>
+  </section>
+
+  <section id="pagina-proximos" class="pagina">
+    <section class="titulo-pagina">
+      <h2>Próximos jogos</h2>
+      <p>Partidas ainda não iniciadas</p>
+    </section>
+
+    <section id="listaProximos" class="lista-jogos"></section>
+  </section>
+
+  <section id="pagina-finalizados" class="pagina">
+    <section class="titulo-pagina">
+      <h2>Jogos finalizados</h2>
+      <p>Resultados já encerrados</p>
+    </section>
+
+    <section id="listaFinalizados" class="lista-jogos"></section>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>

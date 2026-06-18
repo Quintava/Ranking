@@ -28,45 +28,31 @@ const traducaoTimes = {
   Ghana: "Gana",
   Croatia: "Croácia",
   Switzerland: "Suíça",
-  Denmark: "Dinamarca",
-  Poland: "Polônia",
   Australia: "Austrália",
   Qatar: "Catar",
   "Saudi Arabia": "Arábia Saudita",
   Iran: "Irã",
   Ecuador: "Equador",
   Colombia: "Colômbia",
-  Chile: "Chile",
   Paraguay: "Paraguai",
-  Peru: "Peru",
-  Cameroon: "Camarões",
   Tunisia: "Tunísia",
   "Ivory Coast": "Costa do Marfim",
   Egypt: "Egito",
   Algeria: "Argélia",
-  Nigeria: "Nigéria",
   "South Africa": "África do Sul",
   Scotland: "Escócia",
-  Wales: "País de Gales",
-  Ukraine: "Ucrânia",
   Norway: "Noruega",
   Sweden: "Suécia",
   Turkey: "Turquia",
-  Türkiye: "Turquia",
   Czechia: "Tchéquia",
   Austria: "Áustria",
-  Serbia: "Sérvia",
   "New Zealand": "Nova Zelândia",
   Haiti: "Haiti",
   Panama: "Panamá",
-  "Costa Rica": "Costa Rica",
-  Jamaica: "Jamaica",
   "Bosnia and Herzegovina": "Bósnia e Herzegovina",
   "Cape Verde": "Cabo Verde",
   Curacao: "Curaçao",
-  Curaçao: "Curaçao",
   "DR Congo": "RD Congo",
-  "Congo DR": "RD Congo",
   Uzbekistan: "Uzbequistão",
   Iraq: "Iraque",
   Jordan: "Jordânia"
@@ -76,8 +62,6 @@ const ranking = document.getElementById("ranking");
 const ultimaAtualizacao = document.getElementById("ultimaAtualizacao");
 const premioTotalEl = document.getElementById("premioTotal");
 const liderAtualEl = document.getElementById("liderAtual");
-const buscaParticipante = document.getElementById("buscaParticipante");
-const resultadoBusca = document.getElementById("resultadoBusca");
 
 const listaJogosEl = document.getElementById("listaJogos");
 const listaProximosEl = document.getElementById("listaProximos");
@@ -128,7 +112,6 @@ async function carregarRanking() {
     mostrarPremio(premioTotal);
     mostrarLiderAtual();
     mostrarRanking();
-    atualizarBusca();
     atualizarHorario();
 
   } catch (erro) {
@@ -152,6 +135,8 @@ function mostrarRanking() {
     return;
   }
 
+  const lider = listaRanking[0];
+
   listaRanking.forEach(pessoa => {
     const item = document.createElement("div");
 
@@ -161,11 +146,21 @@ function mostrarRanking() {
     if (pessoa.posicaoAtual === 2) item.classList.add("top2");
     if (pessoa.posicaoAtual === 3) item.classList.add("top3");
 
+    const diferenca = lider.pontos - pessoa.pontos;
+    const textoDiferenca =
+      pessoa.posicaoAtual === 1 ? "Líder" : `-${diferenca} pts`;
+
     item.innerHTML = `
       <span class="posicao">${pessoa.posicaoAtual}º</span>
+
       <span class="nome">${pessoa.nome}</span>
+
       <span class="pontos">
         <strong>${pessoa.pontos}</strong> pts
+      </span>
+
+      <span class="diferenca ${pessoa.posicaoAtual === 1 ? "lider" : ""}">
+        ${textoDiferenca}
       </span>
     `;
 
@@ -182,48 +177,6 @@ function mostrarLiderAtual() {
   }
 
   liderAtualEl.textContent = listaRanking[0].nome;
-}
-
-function atualizarBusca() {
-  if (!buscaParticipante || !resultadoBusca) return;
-
-  const termo = buscaParticipante.value.trim().toLowerCase();
-
-  if (!termo) {
-    resultadoBusca.textContent = "Digite um nome para consultar.";
-    return;
-  }
-
-  const pessoa = listaRanking.find(item =>
-    item.nome.toLowerCase().includes(termo)
-  );
-
-  if (!pessoa) {
-    resultadoBusca.textContent = "Participante não encontrado.";
-    return;
-  }
-
-  const lider = listaRanking[0];
-  const diferenca = lider.pontos - pessoa.pontos;
-
-  if (pessoa.posicaoAtual === 1) {
-    resultadoBusca.innerHTML = `
-      🏆 <strong>${pessoa.nome}</strong>, você é o líder do bolão!
-      <br>
-      Pontuação: <strong>${pessoa.pontos} pts</strong>
-    `;
-    return;
-  }
-
-  resultadoBusca.innerHTML = `
-    <strong>${pessoa.nome}</strong> está em 
-    <strong>${pessoa.posicaoAtual}º lugar</strong>.
-    <br>
-    Pontuação: <strong>${pessoa.pontos} pts</strong>.
-    <br>
-    Está a <strong>${diferenca} pts</strong> do líder 
-    <strong>${lider.nome}</strong>.
-  `;
 }
 
 function mostrarPremio(valor) {
@@ -318,7 +271,6 @@ function gerarBandeira(sigla) {
   const conversao = {
     ALG: "dz",
     DZA: "dz",
-
     ARG: "ar",
     AUS: "au",
     AUT: "at",
@@ -537,10 +489,6 @@ botoesMenu.forEach(botao => {
     }
   });
 });
-
-if (buscaParticipante) {
-  buscaParticipante.addEventListener("input", atualizarBusca);
-}
 
 carregarRanking();
 carregarJogos();

@@ -5,6 +5,7 @@ const URL_JOGOS =
   "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?limit=300";
 
 const VALOR_POR_PARTICIPANTE = 20;
+const PERCENTUAL_PREMIO_PAGO = 0.10;
 
 const traducaoTimes = {
   Brazil: "Brasil",
@@ -71,6 +72,9 @@ const ultimaAtualizacaoJogos = document.getElementById("ultimaAtualizacaoJogos")
 const botoesMenu = document.querySelectorAll(".menu-btn");
 const paginas = document.querySelectorAll(".pagina");
 
+const popupGanhadores = document.getElementById("popupGanhadores");
+const fecharPopup = document.getElementById("fecharPopup");
+
 let listaRanking = [];
 let listaJogos = [];
 
@@ -107,7 +111,8 @@ async function carregarRanking() {
         posicaoAtual: index + 1
       }));
 
-    const premioTotal = listaRanking.length * VALOR_POR_PARTICIPANTE;
+    const premioBruto = listaRanking.length * VALOR_POR_PARTICIPANTE;
+    const premioTotal = premioBruto - (premioBruto * PERCENTUAL_PREMIO_PAGO);
 
     mostrarPremio(premioTotal);
     mostrarLiderAtual();
@@ -489,6 +494,12 @@ botoesMenu.forEach(botao => {
     }
   });
 });
+
+if (popupGanhadores && fecharPopup) {
+  fecharPopup.addEventListener("click", () => {
+    popupGanhadores.classList.add("oculto");
+  });
+}
 
 carregarRanking();
 carregarJogos();

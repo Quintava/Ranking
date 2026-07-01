@@ -4,9 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bolão Copa 2026</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
+
+<div id="popupGanhadores" class="popup-overlay">
+  <div class="popup-card">
+    <button id="fecharPopup" class="popup-fechar">×</button>
+
+    <h2> Parabéns aos ganhadores!</h2>
+
+    <p>
+      Primeira etapa da fase de grupos finalizada.
+    </p>
+
+    <img src="img/dm.jpg" alt="Ganhadores da primeira etapa" class="foto-ganhadores">
+
+    <div class="nomes-ganhadores">
+      <strong>Daniel Mascarenhas</strong>
+      <span>&</span>
+      <strong>Matheus Correa</strong>
+    </div>
+
+    <p class="popup-texto">
+      🏆 10% do valor total já foi pago nesta etapa.
+    </p>
+  </div>
+</div>
 
 <main class="container">
 
@@ -31,7 +55,7 @@
       <div class="card-info">
         <span>🏆</span>
         <div>
-          <small>Prêmio atual</small>
+          <small>Prêmio atual com 10% já descontado</small>
           <strong id="premioTotal">R$ 0,00</strong>
         </div>
       </div>
@@ -93,6 +117,6 @@
 
 </main>
 
-<script src="script.js?v=3"></script>
+<script src="script.js?v=4"></script>
 </body>
 </html>
